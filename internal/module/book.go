@@ -10,7 +10,7 @@ import (
 )
 
 type BookWrapper interface {
-	GetBooksByGenre(ctx context.Context, req dto.UserGetBooksByGenreRequest) (dto.UserGetBooksByGenreResponse, error)
+	GetBooksBySubject(ctx context.Context, req dto.UserGetBooksByGenreRequest) (dto.UserGetBooksByGenreResponse, error)
 }
 
 type BookModule struct {
@@ -21,7 +21,7 @@ func NewBookModule() *BookModule {
 	return &BookModule{}
 }
 
-func (b *BookModule) GetBooksByGenre(ctx context.Context, req dto.UserGetBooksByGenreRequest) (dto.UserGetBooksByGenreResponse, error) {
+func (b *BookModule) GetBooksBySubject(ctx context.Context, req dto.UserGetBooksByGenreRequest) (dto.UserGetBooksByGenreResponse, error) {
 	if len(req.Subject) == 0 {
 		return dto.UserGetBooksByGenreResponse{}, constant.ErrInvalidSubject
 	}
