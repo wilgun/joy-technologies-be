@@ -13,20 +13,26 @@ type BookWrapper interface {
 	GetBooksBySubject(ctx context.Context, req dto.UserGetBooksByGenreRequest) (dto.UserGetBooksByGenreResponse, error)
 }
 
-type BookModule struct {
+type bookModule struct {
 	openLibrary openlibrary.Contract
 }
 
-func NewBookModule() *BookModule {
-	return &BookModule{}
+type BookModuleParam struct {
+	OpenLibrary openlibrary.Contract
 }
 
-func (b *BookModule) GetBooksBySubject(ctx context.Context, req dto.UserGetBooksByGenreRequest) (dto.UserGetBooksByGenreResponse, error) {
+func NewBookModule(param BookModuleParam) *bookModule {
+	return &bookModule{
+		openLibrary: param.OpenLibrary,
+	}
+}
+
+func (b *bookModule) GetBooksBySubject(ctx context.Context, req dto.UserGetBooksByGenreRequest) (dto.UserGetBooksByGenreResponse, error) {
 	if len(req.Subject) == 0 {
 		return dto.UserGetBooksByGenreResponse{}, constant.ErrInvalidSubject
 	}
 
-	books, err := b.openLibrary.GetBooksByCountry(ctx, openlibrary.UserGetBookRequest{
+	books, err := b.openLibrary.GetBooksBySubject(ctx, openlibrary.UserGetBookRequest{
 		Subject: req.Subject,
 	})
 	if err != nil {

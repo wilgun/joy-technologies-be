@@ -35,17 +35,17 @@ func (m *MockContract) EXPECT() *MockContractMockRecorder {
 	return m.recorder
 }
 
-// GetBooksByCountry mocks base method.
-func (m *MockContract) GetBooksByCountry(ctx context.Context, req openlibrary.UserGetBookRequest) (openlibrary.UserGetBookResponse, error) {
+// GetBooksBySubject mocks base method.
+func (m *MockContract) GetBooksBySubject(ctx context.Context, req openlibrary.UserGetBookRequest) (openlibrary.UserGetBookResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBooksByCountry", ctx, req)
+	ret := m.ctrl.Call(m, "GetBooksBySubject", ctx, req)
 	ret0, _ := ret[0].(openlibrary.UserGetBookResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetBooksByCountry indicates an expected call of GetBooksByCountry.
-func (mr *MockContractMockRecorder) GetBooksByCountry(ctx, req interface{}) *gomock.Call {
+// GetBooksBySubject indicates an expected call of GetBooksBySubject.
+func (mr *MockContractMockRecorder) GetBooksBySubject(ctx, req interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBooksByCountry", reflect.TypeOf((*MockContract)(nil).GetBooksByCountry), ctx, req)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBooksBySubject", reflect.TypeOf((*MockContract)(nil).GetBooksBySubject), ctx, req)
 }

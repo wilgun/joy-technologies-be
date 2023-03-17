@@ -17,7 +17,7 @@ const (
 )
 
 type Contract interface {
-	GetBooksByCountry(ctx context.Context, req UserGetBookRequest) (UserGetBookResponse, error)
+	GetBooksBySubject(ctx context.Context, req UserGetBookRequest) (UserGetBookResponse, error)
 }
 
 type openLibrary struct {
@@ -34,7 +34,7 @@ func NewOpenLibaryApi(param OpenLibraryParam) Contract {
 	}
 }
 
-func (o *openLibrary) GetBooksByCountry(ctx context.Context, req UserGetBookRequest) (UserGetBookResponse, error) {
+func (o *openLibrary) GetBooksBySubject(ctx context.Context, req UserGetBookRequest) (UserGetBookResponse, error) {
 	request, err := http.NewRequest(http.MethodGet, baseURLReq+subjectsPath+"/"+req.Subject+jsonExt, nil)
 	if err != nil {
 		return UserGetBookResponse{}, err
