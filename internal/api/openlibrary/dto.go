@@ -34,6 +34,7 @@ type Availability struct {
 
 type Work struct {
 	Title             string   `json:"title"`
+	EditionCount      int      `json:"edition_count"`
 	CoverId           *int     `json:"cover_id"`
 	CoverEditionKey   string   `json:"cover_edition_key"`
 	Subject           []string `json:"subject"`
