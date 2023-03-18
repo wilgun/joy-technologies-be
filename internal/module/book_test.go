@@ -184,16 +184,16 @@ func TestSubmitBookSchedule(t *testing.T) {
 				mock.bookStore.EXPECT().CheckManyUserAtTimeRange(key).Return(constant.MaxUserAtTimeRange - 1)
 				mock.bookStore.EXPECT().SubmitBorrowBook(model.UserBorrowBook{
 					UserId:            params.UserId,
-					BookKey:           params.Key,
+					BookId:            params.Key,
 					ExpiredBorrowBook: params.BookTime.AddDate(constant.ExpiredBorrowYear, constant.ExpiredBorrowMonth, constant.ExpiredBorrowDay),
 				}).Return(model.UserBorrowBook{
-					BookId:            bookId,
+					ScheduleId:        bookId,
 					UserId:            params.UserId,
-					BookKey:           params.Key,
+					BookId:            params.Key,
 					ExpiredBorrowBook: expiredBorrowBook,
 				})
 				mock.bookStore.EXPECT().SubmitScheduleBook(bookId, params.BookTime).Return(model.ScheduleBook{
-					BookId:            bookId,
+					ScheduleId:        bookId,
 					StartPickUpBook:   schedulePickupTimeStart,
 					ExpiredPickUpBook: schedulePickupTimeEnd,
 				})
@@ -218,16 +218,16 @@ func TestSubmitBookSchedule(t *testing.T) {
 				mock.bookStore.EXPECT().CheckManyUserAtTimeRange(key7Days).Return(constant.MaxUserAtTimeRange - 1)
 				mock.bookStore.EXPECT().SubmitBorrowBook(model.UserBorrowBook{
 					UserId:            params.UserId,
-					BookKey:           params.Key,
+					BookId:            params.Key,
 					ExpiredBorrowBook: params.BookTime.AddDate(constant.ExpiredBorrowYear, constant.ExpiredBorrowMonth, constant.ExpiredBorrowDay),
 				}).Return(model.UserBorrowBook{
-					BookId:            bookId,
+					ScheduleId:        bookId,
 					UserId:            params.UserId,
-					BookKey:           params.Key,
+					BookId:            params.Key,
 					ExpiredBorrowBook: expiredBorrowBook7Days,
 				})
 				mock.bookStore.EXPECT().SubmitScheduleBook(bookId, params.BookTime).Return(model.ScheduleBook{
-					BookId:            bookId,
+					ScheduleId:        bookId,
 					StartPickUpBook:   schedulePickupTimeStart7Days,
 					ExpiredPickUpBook: schedulePickupTimeEnd7Days,
 				})

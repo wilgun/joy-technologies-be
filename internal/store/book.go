@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/wilgun/joy-technologies-be/internal/model"
 	"math/rand"
-	"strconv"
 	"time"
 )
 
@@ -18,7 +17,7 @@ type BookStore interface {
 	UserBorrowBook(userId int64) model.UserBorrowBook
 	CheckManyUserAtTimeRange(key string) int
 	SubmitBorrowBook(book model.UserBorrowBook) model.UserBorrowBook
-	SubmitScheduleBook(bookId string, bookTime time.Time) model.ScheduleBook
+	SubmitScheduleBook(bookTime time.Time) model.ScheduleBook
 	IsBookBorrowed(key string) bool
 	GetListBorrowedBooksSchedule() map[string]model.ScheduleBook
 }
@@ -45,26 +44,26 @@ func (b *bookStoreImpl) CheckManyUserAtTimeRange(key string) int {
 }
 
 func (b *bookStoreImpl) SubmitBorrowBook(book model.UserBorrowBook) model.UserBorrowBook {
-	id := rand.Int()
-	book.BookId = strconv.Itoa(id)
 	ListUserBorrowBook = append(ListUserBorrowBook, book)
 	return book
 }
 
-func (b *bookStoreImpl) SubmitScheduleBook(bookId string, bookTime time.Time) model.ScheduleBook {
+func (b *bookStoreImpl) SubmitScheduleBook(bookTime time.Time) model.ScheduleBook {
 	schedulePickupTimeStart := bookTime.Add(-time.Minute * time.Duration(bookTime.Minute())).Add(-time.Second * time.Duration(bookTime.Second())).Add(-time.Nanosecond * time.Duration(bookTime.Nanosecond()))
 	schedulePickupTimeEnd := schedulePickupTimeStart.Add(time.Hour * 1)
 
 	key := fmt.Sprintf("%s-%s", schedulePickupTimeStart, schedulePickupTimeEnd)
-	ListScheduleBook[key] = append(ListScheduleBook[key], bookId)
+	id := rand.Int()
+	scheduleId := string(id)
+	ListScheduleBook[key] = append(ListScheduleBook[key], scheduleId)
 
 	scheduleBook := model.ScheduleBook{
-		BookId:            bookId,
+		ScheduleId:        scheduleId,
 		StartPickUpBook:   schedulePickupTimeStart,
 		ExpiredPickUpBook: schedulePickupTimeEnd,
 	}
 
-	ListBorrowedBooksSchedule[bookId] = scheduleBook
+	ListBorrowedBooksSchedule[scheduleId] = scheduleBook
 
 	return scheduleBook
 }

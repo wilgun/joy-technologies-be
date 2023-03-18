@@ -10,16 +10,16 @@ type UserBook struct {
 }
 
 type ScheduleBook struct {
-	BookId            string    `json:"book_id"`
+	ScheduleId        string    `json:"schedule_id"`
 	UserId            int64     `json:"user_id"`
 	StartPickUpBook   time.Time `json:"start_pick_up_book"`
 	ExpiredPickUpBook time.Time `json:"expired_book_schedule"`
 }
 
 type UserBorrowBook struct {
-	BookId            string    `json:"book_id"`
+	ScheduleId        string    `json:"schedule_id"`
 	UserId            int64     `json:"user_id"`
-	BookKey           string    `json:"book_key"`
+	BookId            string    `json:"book_id"`
 	ExpiredBorrowBook time.Time `json:"expired_borrow_book"`
 }
 
