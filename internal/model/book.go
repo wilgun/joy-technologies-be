@@ -2,10 +2,6 @@ package model
 
 import "time"
 
-var (
-	ListScheduleBook map[string][]string
-)
-
 type UserBook struct {
 	Key           string   `json:"key"`
 	Title         string   `json:"title"`

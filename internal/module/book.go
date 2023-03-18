@@ -7,6 +7,7 @@ import (
 	"github.com/wilgun/joy-technologies-be/internal/constant"
 	"github.com/wilgun/joy-technologies-be/internal/dto"
 	"github.com/wilgun/joy-technologies-be/internal/model"
+	"github.com/wilgun/joy-technologies-be/internal/store"
 	"log"
 	"time"
 )
@@ -18,15 +19,18 @@ type BookWrapper interface {
 
 type bookModule struct {
 	openLibrary openlibrary.Contract
+	bookStore   store.BookStore
 }
 
 type BookModuleParam struct {
 	OpenLibrary openlibrary.Contract
+	BookStore   store.BookStore
 }
 
 func NewBookModule(param BookModuleParam) *bookModule {
 	return &bookModule{
 		openLibrary: param.OpenLibrary,
+		bookStore:   param.BookStore,
 	}
 }
 

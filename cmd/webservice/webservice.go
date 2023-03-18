@@ -5,6 +5,7 @@ import (
 	"github.com/wilgun/joy-technologies-be/cmd/webservice/router"
 	"github.com/wilgun/joy-technologies-be/internal/api/openlibrary"
 	"github.com/wilgun/joy-technologies-be/internal/module"
+	"github.com/wilgun/joy-technologies-be/internal/store"
 	"log"
 	"net/http"
 )
@@ -20,8 +21,11 @@ func Start() {
 		Client: httpClient,
 	})
 
+	bookStore := store.NewBookStore()
+
 	bookModule := module.NewBookModule(module.BookModuleParam{
 		OpenLibrary: openLibraryClient,
+		BookStore:   bookStore,
 	})
 
 	httpHandler := handler.NewHttpHandler(handler.HttpHandlerImplParam{
