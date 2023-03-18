@@ -175,8 +175,8 @@ func TestSubmitBookSchedule(t *testing.T) {
 			expectedError: nil,
 			expectedResult: dto.SubmitBookScheduleResponse{
 				BookId:            scheduleId,
-				StartPickUpBook:   schedulePickupTimeStart,
-				ExpiredPickUpBook: schedulePickupTimeEnd,
+				StartPickUpBook:   &schedulePickupTimeStart,
+				ExpiredPickUpBook: &schedulePickupTimeEnd,
 			},
 			expectations: func(params *params) {
 				mock.bookStore.EXPECT().IsBookBorrowed(params.BookId).Return(false)
@@ -195,8 +195,8 @@ func TestSubmitBookSchedule(t *testing.T) {
 				})
 				mock.bookStore.EXPECT().SubmitScheduleBook(params.BookTime).Return(model.ScheduleBook{
 					ScheduleId:        scheduleId,
-					StartPickUpBook:   schedulePickupTimeStart,
-					ExpiredPickUpBook: schedulePickupTimeEnd,
+					StartPickUpBook:   &schedulePickupTimeStart,
+					ExpiredPickUpBook: &schedulePickupTimeEnd,
 				})
 			},
 		},
@@ -210,8 +210,8 @@ func TestSubmitBookSchedule(t *testing.T) {
 			expectedError: nil,
 			expectedResult: dto.SubmitBookScheduleResponse{
 				BookId:            scheduleId,
-				StartPickUpBook:   schedulePickupTimeStart7Days,
-				ExpiredPickUpBook: schedulePickupTimeEnd7Days,
+				StartPickUpBook:   &schedulePickupTimeStart7Days,
+				ExpiredPickUpBook: &schedulePickupTimeEnd7Days,
 			},
 			expectations: func(params *params) {
 				mock.bookStore.EXPECT().IsBookBorrowed(params.BookId).Return(false)
@@ -230,8 +230,8 @@ func TestSubmitBookSchedule(t *testing.T) {
 				})
 				mock.bookStore.EXPECT().SubmitScheduleBook(params.BookTime).Return(model.ScheduleBook{
 					ScheduleId:        scheduleId,
-					StartPickUpBook:   schedulePickupTimeStart7Days,
-					ExpiredPickUpBook: schedulePickupTimeEnd7Days,
+					StartPickUpBook:   &schedulePickupTimeStart7Days,
+					ExpiredPickUpBook: &schedulePickupTimeEnd7Days,
 				})
 			},
 		},

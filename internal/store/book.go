@@ -64,8 +64,8 @@ func (b *bookStoreImpl) SubmitScheduleBook(bookTime time.Time) model.ScheduleBoo
 
 	scheduleBook := model.ScheduleBook{
 		ScheduleId:        scheduleId,
-		StartPickUpBook:   schedulePickupTimeStart,
-		ExpiredPickUpBook: schedulePickupTimeEnd,
+		StartPickUpBook:   &schedulePickupTimeStart,
+		ExpiredPickUpBook: &schedulePickupTimeEnd,
 	}
 
 	ListBorrowedBooksSchedule[scheduleId] = scheduleBook

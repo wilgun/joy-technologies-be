@@ -49,6 +49,20 @@ func (mr *MockBookStoreMockRecorder) CheckManyUserAtTimeRange(key interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckManyUserAtTimeRange", reflect.TypeOf((*MockBookStore)(nil).CheckManyUserAtTimeRange), key)
 }
 
+// GetListBorrowedBook mocks base method.
+func (m *MockBookStore) GetListBorrowedBook() map[string]model.UserBorrowBook {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetListBorrowedBook")
+	ret0, _ := ret[0].(map[string]model.UserBorrowBook)
+	return ret0
+}
+
+// GetListBorrowedBook indicates an expected call of GetListBorrowedBook.
+func (mr *MockBookStoreMockRecorder) GetListBorrowedBook() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetListBorrowedBook", reflect.TypeOf((*MockBookStore)(nil).GetListBorrowedBook))
+}
+
 // GetListBorrowedBooksSchedule mocks base method.
 func (m *MockBookStore) GetListBorrowedBooksSchedule() map[string]model.ScheduleBook {
 	m.ctrl.T.Helper()
@@ -64,17 +78,17 @@ func (mr *MockBookStoreMockRecorder) GetListBorrowedBooksSchedule() *gomock.Call
 }
 
 // IsBookBorrowed mocks base method.
-func (m *MockBookStore) IsBookBorrowed(key string) bool {
+func (m *MockBookStore) IsBookBorrowed(bookId string) bool {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsBookBorrowed", key)
+	ret := m.ctrl.Call(m, "IsBookBorrowed", bookId)
 	ret0, _ := ret[0].(bool)
 	return ret0
 }
 
 // IsBookBorrowed indicates an expected call of IsBookBorrowed.
-func (mr *MockBookStoreMockRecorder) IsBookBorrowed(key interface{}) *gomock.Call {
+func (mr *MockBookStoreMockRecorder) IsBookBorrowed(bookId interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsBookBorrowed", reflect.TypeOf((*MockBookStore)(nil).IsBookBorrowed), key)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsBookBorrowed", reflect.TypeOf((*MockBookStore)(nil).IsBookBorrowed), bookId)
 }
 
 // SubmitBorrowBook mocks base method.
