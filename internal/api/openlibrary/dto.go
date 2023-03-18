@@ -33,6 +33,7 @@ type Availability struct {
 }
 
 type Work struct {
+	Key               string   `json:"key"`
 	Title             string   `json:"title"`
 	EditionCount      int      `json:"edition_count"`
 	CoverId           *int     `json:"cover_id"`

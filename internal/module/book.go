@@ -54,6 +54,7 @@ func (b *bookModule) GetBooksBySubject(ctx context.Context, req dto.UserGetBooks
 		}
 
 		book := model.UserBook{
+			Key:           work.Key,
 			Title:         work.Title,
 			Author:        authors,
 			EditionNumber: work.EditionCount,
