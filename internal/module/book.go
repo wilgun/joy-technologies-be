@@ -76,7 +76,7 @@ func (b *bookModule) GetBooksBySubject(ctx context.Context, req dto.UserGetBooks
 }
 
 func (b *bookModule) SubmitBookSchedule(ctx context.Context, req dto.SubmitBookScheduleRequest) (dto.SubmitBookScheduleResponse, error) {
-	if len(req.Key) == 0 || req.UserId < 1 {
+	if len(req.Key) == 0 || req.UserId < 1 || req.BookTime.Before(time.Now()) {
 		return dto.SubmitBookScheduleResponse{}, constant.ErrInvalidSubmitSchedule
 	}
 
