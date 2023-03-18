@@ -20,6 +20,6 @@ type SubmitBookScheduleRequest struct {
 }
 
 type SubmitBookScheduleResponse struct {
-	BookId              string    `json:"book_id"`
-	ExpiredBookSchedule time.Time `json:"expired_book_schedule"`
+	BookId            string    `json:"book_id"`
+	ExpiredPickUpBook time.Time `json:"expired_book_schedule"`
 }

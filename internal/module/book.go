@@ -76,8 +76,17 @@ func (b *bookModule) GetBooksBySubject(ctx context.Context, req dto.UserGetBooks
 }
 
 func (b *bookModule) SubmitBookSchedule(ctx context.Context, req dto.SubmitBookScheduleRequest) (dto.SubmitBookScheduleResponse, error) {
-	if len(req.Key) == 0 || req.UserId < 1 || req.BookTime.Before(time.Now().UTC()) {
+	currentTime := time.Now().UTC()
+	if len(req.Key) == 0 || req.UserId < 1 || req.BookTime.Before(currentTime) {
 		return dto.SubmitBookScheduleResponse{}, constant.ErrInvalidSubmitSchedule
+	}
+
+	if diffDay := currentTime.Sub(req.BookTime).Hours() / 24; diffDay < -7 {
+		return dto.SubmitBookScheduleResponse{}, constant.ErrInvalidSubmitSchedule
+	}
+
+	if b.bookStore.IsBookBorrowed(req.Key) {
+		return dto.SubmitBookScheduleResponse{}, constant.ErrBookBorrowed
 	}
 
 	if user := b.bookStore.UserBorrowBook(req.UserId); user.UserId > 0 {
@@ -97,8 +106,8 @@ func (b *bookModule) SubmitBookSchedule(ctx context.Context, req dto.SubmitBookS
 	schedule := b.bookStore.SubmitScheduleBook(borrowBook.BookId, req.BookTime)
 
 	resp := dto.SubmitBookScheduleResponse{
-		BookId:              borrowBook.BookId,
-		ExpiredBookSchedule: schedule.ExpiredBookSchedule,
+		BookId:            borrowBook.BookId,
+		ExpiredPickUpBook: schedule.ExpiredBookSchedule,
 	}
 
 	return resp, nil

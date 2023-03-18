@@ -14,4 +14,5 @@ var (
 	ErrInvalidSubmitSchedule         = errors.New("invalid submit schedule request")
 	ErrNotEligiblePickUpTimeSchedule = errors.New("there are many people at that time")
 	ErrUserBorrowingBook             = errors.New("user is borrowing book")
+	ErrBookBorrowed                  = errors.New("book is being borrowed by another user")
 )

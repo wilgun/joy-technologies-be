@@ -18,7 +18,8 @@ func Wrap(err error) dto.ResponseHandler {
 		errors.Is(err, constant.ErrBooksNotFound) ||
 		errors.Is(err, constant.ErrDecodeRequest) ||
 		errors.Is(err, constant.ErrInvalidSubmitSchedule) ||
-		errors.Is(err, constant.ErrNotEligiblePickUpTimeSchedule):
+		errors.Is(err, constant.ErrNotEligiblePickUpTimeSchedule) ||
+		errors.Is(err, constant.ErrBookBorrowed):
 		httpCode = http.StatusBadRequest
 	case errors.Is(err, constant.ErrUserBorrowingBook):
 		httpCode = http.StatusNotAcceptable
