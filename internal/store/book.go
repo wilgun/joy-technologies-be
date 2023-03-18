@@ -19,6 +19,7 @@ type BookStore interface {
 	CheckManyUserAtTimeRange(key string) int
 	SubmitBorrowBook(book model.UserBorrowBook) model.UserBorrowBook
 	SubmitScheduleBook(bookId string, bookTime time.Time) model.ScheduleBook
+	IsBookBorrowed(key string) bool
 }
 
 type bookStoreImpl struct {
@@ -61,4 +62,13 @@ func (b *bookStoreImpl) SubmitScheduleBook(bookId string, bookTime time.Time) mo
 		BookId:              bookId,
 		ExpiredBookSchedule: schedulePickupTimeEnd,
 	}
+}
+
+func (b *bookStoreImpl) IsBookBorrowed(key string) bool {
+	for _, bookKey := range ListBorrowedBook {
+		if key == bookKey {
+			return true
+		}
+	}
+	return false
 }
