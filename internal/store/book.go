@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/wilgun/joy-technologies-be/internal/model"
 	"math/rand"
+	"strconv"
 	"time"
 )
 
@@ -59,7 +60,7 @@ func (b *bookStoreImpl) SubmitScheduleBook(bookTime time.Time) model.ScheduleBoo
 
 	key := fmt.Sprintf("%s-%s", schedulePickupTimeStart, schedulePickupTimeEnd)
 	id := rand.Int()
-	scheduleId := string(id)
+	scheduleId := strconv.Itoa(id)
 	ListScheduleBook[key] = append(ListScheduleBook[key], scheduleId)
 
 	scheduleBook := model.ScheduleBook{
