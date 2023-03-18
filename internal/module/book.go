@@ -80,15 +80,41 @@ func (b *bookModule) SubmitBookSchedule(ctx context.Context, req dto.SubmitBookS
 		return dto.SubmitBookScheduleResponse{}, constant.ErrInvalidSubmitSchedule
 	}
 
-	// TODO: will be implemented
-	return dto.SubmitBookScheduleResponse{}, constant.ErrInvalidSubmitSchedule
+	if user := b.bookStore.UserBorrowBook(req.UserId); user.UserId > 0 {
+		return dto.SubmitBookScheduleResponse{}, constant.ErrUserBorrowingBook
+	}
+
+	if !b.eligibleSchedulePickupTime(req.BookTime) {
+		return dto.SubmitBookScheduleResponse{}, constant.ErrNotEligiblePickUpTimeSchedule
+	}
+
+	borrowBook := b.bookStore.SubmitBorrowBook(model.UserBorrowBook{
+		UserId:            req.UserId,
+		ExpiredBorrowBook: req.BookTime.AddDate(constant.ExpiredBorrowYear, constant.ExpiredBorrowMonth, constant.ExpiredBorrowDay),
+		BookKey:           req.Key,
+	})
+
+	schedule := b.bookStore.SubmitScheduleBook(borrowBook.BookId, req.BookTime)
+
+	resp := dto.SubmitBookScheduleResponse{
+		BookId:              borrowBook.BookId,
+		ExpiredBookSchedule: schedule.ExpiredBookSchedule,
+	}
+
+	return resp, nil
 }
 
-func (b *bookModule) checkManyUserAtTimeRange(bookTime time.Time) bool {
+func (b *bookModule) eligibleSchedulePickupTime(bookTime time.Time) bool {
 	schedulePickupTimeStart := bookTime.Add(-time.Minute * time.Duration(bookTime.Minute())).Add(-time.Second * time.Duration(bookTime.Second())).Add(-time.Nanosecond * time.Duration(bookTime.Nanosecond()))
 	schedulePickupTimeEnd := schedulePickupTimeStart.Add(time.Hour * 1)
 
-	// TODO: will be continued when store already created
-	fmt.Sprintf("%s-%s", schedulePickupTimeStart, schedulePickupTimeEnd)
+	key := fmt.Sprintf("%s-%s", schedulePickupTimeStart, schedulePickupTimeEnd)
+
+	manyUser := b.bookStore.CheckManyUserAtTimeRange(key)
+
+	if manyUser >= constant.MaxUserAtTimeRange {
+		return false
+	}
+
 	return true
 }
