@@ -1,7 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"github.com/wilgun/joy-technologies-be/cmd/webservice"
+	"os"
+	"os/signal"
+	"syscall"
+)
 
 func main() {
-	fmt.Println("first init project")
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM, syscall.SIGHUP, syscall.SIGINT, syscall.SIGKILL, syscall.SIGQUIT)
+
+	webservice.Start()
 }

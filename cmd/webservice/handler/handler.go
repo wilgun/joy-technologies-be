@@ -22,7 +22,7 @@ type HttpHandlerImplParam struct {
 	BookModule module.BookWrapper
 }
 
-func NewHttpHandler(param HttpHandlerImplParam) HttpHandler {
+func NewHttpHandler(param HttpHandlerImplParam) *HttpHandlerImpl {
 	return &HttpHandlerImpl{
 		bookModule: param.BookModule,
 	}

@@ -8,7 +8,7 @@ import (
 func Init(h *handler.HttpHandlerImpl) *httprouter.Router {
 	router := httprouter.New()
 	publicRouter(router, h)
-	router.MethodNotAllowed = h.HandleMethodNotAllowed()
+	router.MethodNotAllowed = h.HandleMethodNotFound()
 	router.NotFound = h.HandleMethodNotFound()
 
 	return router
