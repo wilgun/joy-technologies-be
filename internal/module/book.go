@@ -151,6 +151,35 @@ func (b *bookModule) AdminGetBooksBySubject(ctx context.Context, req dto.AdminGe
 		return dto.AdminGetBooksByGenreResponse{}, constant.ErrBooksNotFound
 	}
 
-	// TODO: will be implemented
+	//borrowedBooks := b.bookStore.GetListBorrowedBooks()
+	//
+	//booksData := []model.AdminBook{}
+	//for _, work := range books.Works {
+	//	authors := []string{}
+	//	for _, author := range work.Authors {
+	//		authors = append(authors, author.Name)
+	//	}
+	//
+	//	userBook := model.UserBook{
+	//		Key:           work.Key,
+	//		Title:         work.Title,
+	//		Author:        authors,
+	//		EditionNumber: work.EditionCount,
+	//	}
+	//
+	//	// TO DO: will be implemented
+	//	//adminBook := model.AdminBook{
+	//	//	UserBook: userBook,
+	//	//}
+	//	//for _, borrowedBook := range borrowedBooks {
+	//	//	//if borrowedBook == userBook.Key {
+	//	//	//	adminBook.PickUpSchedule.StartPickUpBook
+	//	//	//}
+	//	//}
+	//
+	//	//booksData = append(booksData, book)
+	//}
+
+	//respData := dto.AdminGetBooksByGenreResponse{Books: booksData}
 	return dto.AdminGetBooksByGenreResponse{}, nil
 }

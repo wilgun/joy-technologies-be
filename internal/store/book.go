@@ -11,7 +11,7 @@ import (
 var (
 	ListScheduleBook   map[string][]string
 	ListUserBorrowBook []model.UserBorrowBook
-	ListBorrowedBooks  []string
+	ListBorrowedBooks  map[string]model.UserBorrowBook
 )
 
 type BookStore interface {
@@ -20,7 +20,7 @@ type BookStore interface {
 	SubmitBorrowBook(book model.UserBorrowBook) model.UserBorrowBook
 	SubmitScheduleBook(bookId string, bookTime time.Time) model.ScheduleBook
 	IsBookBorrowed(key string) bool
-	GetListBorrowedBooks() []string
+	GetListBorrowedBooks() map[string]model.UserBorrowBook
 }
 
 type bookStoreImpl struct {
@@ -48,7 +48,7 @@ func (b *bookStoreImpl) SubmitBorrowBook(book model.UserBorrowBook) model.UserBo
 	id := rand.Int()
 	book.BookId = strconv.Itoa(id)
 	ListUserBorrowBook = append(ListUserBorrowBook, book)
-	ListBorrowedBooks = append(ListBorrowedBooks, book.BookKey)
+	ListBorrowedBooks[book.BookKey] = book
 	return book
 }
 
@@ -67,14 +67,12 @@ func (b *bookStoreImpl) SubmitScheduleBook(bookId string, bookTime time.Time) mo
 }
 
 func (b *bookStoreImpl) IsBookBorrowed(key string) bool {
-	for _, bookKey := range ListBorrowedBooks {
-		if key == bookKey {
-			return true
-		}
+	if _, ok := ListBorrowedBooks[key]; ok {
+		return true
 	}
 	return false
 }
 
-func (b *bookStoreImpl) GetListBorrowedBooks() []string {
+func (b *bookStoreImpl) GetListBorrowedBooks() map[string]model.UserBorrowBook {
 	return ListBorrowedBooks
 }

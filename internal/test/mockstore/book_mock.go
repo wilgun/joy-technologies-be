@@ -50,10 +50,10 @@ func (mr *MockBookStoreMockRecorder) CheckManyUserAtTimeRange(key interface{}) *
 }
 
 // GetListBorrowedBooks mocks base method.
-func (m *MockBookStore) GetListBorrowedBooks() []string {
+func (m *MockBookStore) GetListBorrowedBooks() map[string]model.UserBorrowBook {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetListBorrowedBooks")
-	ret0, _ := ret[0].([]string)
+	ret0, _ := ret[0].(map[string]model.UserBorrowBook)
 	return ret0
 }
 
