@@ -101,13 +101,14 @@ func (b *bookModule) SubmitBookSchedule(ctx context.Context, req dto.SubmitBookS
 		return dto.SubmitBookScheduleResponse{}, constant.ErrNotEligiblePickUpTimeSchedule
 	}
 
+	schedule := b.bookStore.SubmitScheduleBook(req.BookTime)
+
 	borrowBook := b.bookStore.SubmitBorrowBook(model.UserBorrowBook{
+		ScheduleId:        schedule.ScheduleId,
 		UserId:            req.UserId,
 		ExpiredBorrowBook: req.BookTime.AddDate(constant.ExpiredBorrowYear, constant.ExpiredBorrowMonth, constant.ExpiredBorrowDay),
 		BookId:            req.Key,
 	})
-
-	schedule := b.bookStore.SubmitScheduleBook(borrowBook.ScheduleId, req.BookTime)
 
 	resp := dto.SubmitBookScheduleResponse{
 		BookId:            borrowBook.ScheduleId,

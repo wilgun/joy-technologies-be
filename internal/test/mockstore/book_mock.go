@@ -49,18 +49,18 @@ func (mr *MockBookStoreMockRecorder) CheckManyUserAtTimeRange(key interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckManyUserAtTimeRange", reflect.TypeOf((*MockBookStore)(nil).CheckManyUserAtTimeRange), key)
 }
 
-// GetListBorrowedBooks mocks base method.
-func (m *MockBookStore) GetListBorrowedBooks() map[string]model.UserBorrowBook {
+// GetListBorrowedBooksSchedule mocks base method.
+func (m *MockBookStore) GetListBorrowedBooksSchedule() map[string]model.ScheduleBook {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetListBorrowedBooksSchedule")
-	ret0, _ := ret[0].(map[string]model.UserBorrowBook)
+	ret0, _ := ret[0].(map[string]model.ScheduleBook)
 	return ret0
 }
 
-// GetListBorrowedBooks indicates an expected call of GetListBorrowedBooks.
-func (mr *MockBookStoreMockRecorder) GetListBorrowedBooks() *gomock.Call {
+// GetListBorrowedBooksSchedule indicates an expected call of GetListBorrowedBooksSchedule.
+func (mr *MockBookStoreMockRecorder) GetListBorrowedBooksSchedule() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetListBorrowedBooksSchedule", reflect.TypeOf((*MockBookStore)(nil).GetListBorrowedBooks))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetListBorrowedBooksSchedule", reflect.TypeOf((*MockBookStore)(nil).GetListBorrowedBooksSchedule))
 }
 
 // IsBookBorrowed mocks base method.
@@ -92,17 +92,17 @@ func (mr *MockBookStoreMockRecorder) SubmitBorrowBook(book interface{}) *gomock.
 }
 
 // SubmitScheduleBook mocks base method.
-func (m *MockBookStore) SubmitScheduleBook(bookId string, bookTime time.Time) model.ScheduleBook {
+func (m *MockBookStore) SubmitScheduleBook(bookTime time.Time) model.ScheduleBook {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SubmitScheduleBook", bookId, bookTime)
+	ret := m.ctrl.Call(m, "SubmitScheduleBook", bookTime)
 	ret0, _ := ret[0].(model.ScheduleBook)
 	return ret0
 }
 
 // SubmitScheduleBook indicates an expected call of SubmitScheduleBook.
-func (mr *MockBookStoreMockRecorder) SubmitScheduleBook(bookId, bookTime interface{}) *gomock.Call {
+func (mr *MockBookStoreMockRecorder) SubmitScheduleBook(bookTime interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SubmitScheduleBook", reflect.TypeOf((*MockBookStore)(nil).SubmitScheduleBook), bookId, bookTime)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SubmitScheduleBook", reflect.TypeOf((*MockBookStore)(nil).SubmitScheduleBook), bookTime)
 }
 
 // UserBorrowBook mocks base method.
