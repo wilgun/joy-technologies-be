@@ -20,9 +20,9 @@ type SubmitBookScheduleRequest struct {
 }
 
 type SubmitBookScheduleResponse struct {
-	BookId            string    `json:"book_id"`
-	StartPickUpBook   time.Time `json:"start_pick_up_book"`
-	ExpiredPickUpBook time.Time `json:"expired_pick_up_book"`
+	BookId            string     `json:"book_id"`
+	StartPickUpBook   *time.Time `json:"start_pick_up_book"`
+	ExpiredPickUpBook *time.Time `json:"expired_pick_up_book"`
 }
 
 type AdminGetBooksByGenreRequest struct {

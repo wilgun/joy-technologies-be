@@ -152,35 +152,37 @@ func (b *bookModule) AdminGetBooksBySubject(ctx context.Context, req dto.AdminGe
 		return dto.AdminGetBooksByGenreResponse{}, constant.ErrBooksNotFound
 	}
 
-	//borrowedBooks := b.bookStore.GetListBorrowedBooks()
-	//
-	//booksData := []model.AdminBook{}
-	//for _, work := range books.Works {
-	//	authors := []string{}
-	//	for _, author := range work.Authors {
-	//		authors = append(authors, author.Name)
-	//	}
-	//
-	//	userBook := model.UserBook{
-	//		BookId:           work.BookId,
-	//		Title:         work.Title,
-	//		Author:        authors,
-	//		EditionNumber: work.EditionCount,
-	//	}
-	//
-	//	// TO DO: will be implemented
-	//	//adminBook := model.AdminBook{
-	//	//	UserBook: userBook,
-	//	//}
-	//	//for _, borrowedBook := range borrowedBooks {
-	//	//	//if borrowedBook == userBook.BookId {
-	//	//	//	adminBook.PickUpSchedule.StartPickUpBook
-	//	//	//}
-	//	//}
-	//
-	//	//booksData = append(booksData, book)
-	//}
+	borrowedBooks := b.bookStore.GetListBorrowedBook()
+	borrowedBooksSchedule := b.bookStore.GetListBorrowedBooksSchedule()
 
-	//respData := dto.AdminGetBooksByGenreResponse{Books: booksData}
-	return dto.AdminGetBooksByGenreResponse{}, nil
+	booksData := []model.AdminBook{}
+	for _, work := range books.Works {
+		authors := []string{}
+		for _, author := range work.Authors {
+			authors = append(authors, author.Name)
+		}
+
+		userBook := model.UserBook{
+			BookId:        work.Key,
+			Title:         work.Title,
+			Author:        authors,
+			EditionNumber: work.EditionCount,
+		}
+
+		adminBook := model.AdminBook{
+			UserBook:       userBook,
+			PickUpSchedule: model.ScheduleBook{},
+		}
+		if b, ok := borrowedBooks[userBook.BookId]; ok {
+			if c, exist := borrowedBooksSchedule[b.ScheduleId]; exist {
+				adminBook.PickUpSchedule.StartPickUpBook = c.StartPickUpBook
+				adminBook.PickUpSchedule.ExpiredPickUpBook = c.ExpiredPickUpBook
+			}
+		}
+
+		booksData = append(booksData, adminBook)
+	}
+
+	respData := dto.AdminGetBooksByGenreResponse{Books: booksData}
+	return respData, nil
 }
