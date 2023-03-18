@@ -107,7 +107,8 @@ func (b *bookModule) SubmitBookSchedule(ctx context.Context, req dto.SubmitBookS
 
 	resp := dto.SubmitBookScheduleResponse{
 		BookId:            borrowBook.BookId,
-		ExpiredPickUpBook: schedule.ExpiredBookSchedule,
+		StartPickUpBook:   schedule.StartPickUpBook,
+		ExpiredPickUpBook: schedule.ExpiredPickUpBook,
 	}
 
 	return resp, nil

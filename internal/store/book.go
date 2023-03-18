@@ -59,8 +59,9 @@ func (b *bookStoreImpl) SubmitScheduleBook(bookId string, bookTime time.Time) mo
 	ListScheduleBook[key] = append(ListScheduleBook[key], bookId)
 
 	return model.ScheduleBook{
-		BookId:              bookId,
-		ExpiredBookSchedule: schedulePickupTimeEnd,
+		BookId:            bookId,
+		StartPickUpBook:   schedulePickupTimeStart,
+		ExpiredPickUpBook: schedulePickupTimeEnd,
 	}
 }
 

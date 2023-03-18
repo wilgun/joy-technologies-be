@@ -21,5 +21,6 @@ type SubmitBookScheduleRequest struct {
 
 type SubmitBookScheduleResponse struct {
 	BookId            string    `json:"book_id"`
-	ExpiredPickUpBook time.Time `json:"expired_book_schedule"`
+	StartPickUpBook   time.Time `json:"start_pick_up_book"`
+	ExpiredPickUpBook time.Time `json:"expired_pick_up_book"`
 }
