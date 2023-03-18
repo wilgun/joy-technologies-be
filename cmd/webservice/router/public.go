@@ -10,4 +10,9 @@ func publicRouter(router *httprouter.Router, handler handler.HttpHandler) {
 		"/public/v1/subjects/:subject",
 		handler.GetBooksBySubject,
 	)
+
+	router.POST(
+		"/public/v1/borrow",
+		handler.SubmitBorrowBook,
+	)
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/wilgun/joy-technologies-be/internal/model"
 	"math/rand"
+	"strconv"
 	"time"
 )
 
@@ -23,6 +24,7 @@ type bookStoreImpl struct {
 }
 
 func NewBookStore() BookStore {
+	ListScheduleBook = map[string][]string{}
 	return &bookStoreImpl{}
 }
 
@@ -40,7 +42,8 @@ func (b *bookStoreImpl) CheckManyUserAtTimeRange(key string) int {
 }
 
 func (b *bookStoreImpl) SubmitBorrowBook(book model.UserBorrowBook) model.UserBorrowBook {
-	book.BookId = string(rand.Int())
+	id := rand.Int()
+	book.BookId = strconv.Itoa(id)
 	ListUserBorrowBook = append(ListUserBorrowBook, book)
 	return book
 }

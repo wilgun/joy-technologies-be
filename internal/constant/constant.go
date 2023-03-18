@@ -1,7 +1,7 @@
 package constant
 
 const (
-	MaxUserAtTimeRange = 10
+	MaxUserAtTimeRange = 1
 
 	ExpiredBorrowYear  = 0
 	ExpiredBorrowMonth = 0
