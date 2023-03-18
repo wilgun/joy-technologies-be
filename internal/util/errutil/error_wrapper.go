@@ -10,6 +10,10 @@ import (
 func Wrap(err error) dto.ResponseHandler {
 	httpCode := http.StatusInternalServerError
 	switch {
+	case errors.Is(err, constant.ErrMethodNotAllowed):
+		httpCode = http.StatusMethodNotAllowed
+	case errors.Is(err, constant.ErrRouterNotFound):
+		httpCode = http.StatusNotFound
 	case errors.Is(err, constant.ErrInvalidSubject) || errors.Is(err, constant.ErrBooksNotFound):
 		httpCode = http.StatusBadRequest
 	}
