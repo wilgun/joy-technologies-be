@@ -170,13 +170,11 @@ func (b *bookModule) AdminGetBooksBySubject(ctx context.Context, req dto.AdminGe
 		}
 
 		adminBook := model.AdminBook{
-			UserBook:       userBook,
-			PickUpSchedule: model.ScheduleBook{},
+			UserBook: userBook,
 		}
 		if b, ok := borrowedBooks[userBook.BookId]; ok {
 			if c, exist := borrowedBooksSchedule[b.ScheduleId]; exist {
-				adminBook.PickUpSchedule.StartPickUpBook = c.StartPickUpBook
-				adminBook.PickUpSchedule.ExpiredPickUpBook = c.ExpiredPickUpBook
+				adminBook.PickUpSchedule = c
 			}
 		}
 

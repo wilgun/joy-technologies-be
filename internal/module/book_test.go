@@ -413,6 +413,8 @@ func TestAdminGetBooksBySubject(t *testing.T) {
 	}
 
 	pickUpSchedule1 := model.ScheduleBook{
+		ScheduleId:        "123",
+		UserId:            1,
 		StartPickUpBook:   &startPickUpBook1,
 		ExpiredPickUpBook: &expiredPickUpBook1,
 	}

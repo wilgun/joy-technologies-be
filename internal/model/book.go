@@ -12,8 +12,8 @@ type UserBook struct {
 type ScheduleBook struct {
 	ScheduleId        string     `json:"schedule_id,omitempty"`
 	UserId            int64      `json:"user_id,omitempty"`
-	StartPickUpBook   *time.Time `json:"start_pick_up_book"`
-	ExpiredPickUpBook *time.Time `json:"expired_book_schedule"`
+	StartPickUpBook   *time.Time `json:"start_pick_up_book,omitempty"`
+	ExpiredPickUpBook *time.Time `json:"expired_book_schedule,omitempty"`
 }
 
 type UserBorrowBook struct {
@@ -25,5 +25,5 @@ type UserBorrowBook struct {
 
 type AdminBook struct {
 	UserBook
-	PickUpSchedule ScheduleBook `json:"pick_up_schedule"`
+	PickUpSchedule ScheduleBook `json:"pick_up_schedule,omitempty"`
 }
