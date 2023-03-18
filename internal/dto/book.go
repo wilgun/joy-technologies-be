@@ -24,3 +24,11 @@ type SubmitBookScheduleResponse struct {
 	StartPickUpBook   time.Time `json:"start_pick_up_book"`
 	ExpiredPickUpBook time.Time `json:"expired_pick_up_book"`
 }
+
+type AdminGetBooksByGenreRequest struct {
+	Subject string `json:"subject"`
+}
+
+type AdminGetBooksByGenreResponse struct {
+	Books []model.AdminBook `json:"books"`
+}

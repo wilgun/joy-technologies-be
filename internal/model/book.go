@@ -22,3 +22,8 @@ type UserBorrowBook struct {
 	BookKey           string    `json:"book_key"`
 	ExpiredBorrowBook time.Time `json:"expired_borrow_book"`
 }
+
+type AdminBook struct {
+	UserBook
+	PickUpSchedule ScheduleBook `json:"pick_up_schedule"`
+}

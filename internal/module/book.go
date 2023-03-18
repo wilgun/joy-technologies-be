@@ -13,8 +13,12 @@ import (
 )
 
 type BookWrapper interface {
+	// User
 	GetBooksBySubject(ctx context.Context, req dto.UserGetBooksByGenreRequest) (dto.UserGetBooksByGenreResponse, error)
 	SubmitBookSchedule(ctx context.Context, req dto.SubmitBookScheduleRequest) (dto.SubmitBookScheduleResponse, error)
+
+	// Librarian
+	AdminGetBooksBySubject(ctx context.Context, req dto.AdminGetBooksByGenreRequest) (dto.AdminGetBooksByGenreResponse, error)
 }
 
 type bookModule struct {
@@ -127,4 +131,26 @@ func (b *bookModule) eligibleSchedulePickupTime(bookTime time.Time) bool {
 	}
 
 	return true
+}
+
+func (b *bookModule) AdminGetBooksBySubject(ctx context.Context, req dto.AdminGetBooksByGenreRequest) (dto.AdminGetBooksByGenreResponse, error) {
+	if len(req.Subject) == 0 {
+		return dto.AdminGetBooksByGenreResponse{}, constant.ErrInvalidSubject
+	}
+
+	books, err := b.openLibrary.GetBooksBySubject(ctx, openlibrary.UserGetBookRequest{
+		Subject: req.Subject,
+	})
+	if err != nil {
+		log.Printf("failed to get books from open library, err:%+v\n", err)
+		return dto.AdminGetBooksByGenreResponse{}, constant.ErrGetBooksOpenLibrary
+	}
+
+	if len(books.Works) == 0 {
+		log.Printf("books not found")
+		return dto.AdminGetBooksByGenreResponse{}, constant.ErrBooksNotFound
+	}
+
+	// TODO: will be implemented
+	return dto.AdminGetBooksByGenreResponse{}, nil
 }
