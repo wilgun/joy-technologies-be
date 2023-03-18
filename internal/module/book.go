@@ -2,15 +2,18 @@ package module
 
 import (
 	"context"
+	"fmt"
 	"github.com/wilgun/joy-technologies-be/internal/api/openlibrary"
 	"github.com/wilgun/joy-technologies-be/internal/constant"
 	"github.com/wilgun/joy-technologies-be/internal/dto"
 	"github.com/wilgun/joy-technologies-be/internal/model"
 	"log"
+	"time"
 )
 
 type BookWrapper interface {
 	GetBooksBySubject(ctx context.Context, req dto.UserGetBooksByGenreRequest) (dto.UserGetBooksByGenreResponse, error)
+	SubmitBookSchedule(ctx context.Context, req dto.SubmitBookScheduleRequest) (dto.SubmitBookScheduleResponse, error)
 }
 
 type bookModule struct {
@@ -66,4 +69,22 @@ func (b *bookModule) GetBooksBySubject(ctx context.Context, req dto.UserGetBooks
 	respData := dto.UserGetBooksByGenreResponse{Books: booksData}
 
 	return respData, nil
+}
+
+func (b *bookModule) SubmitBookSchedule(ctx context.Context, req dto.SubmitBookScheduleRequest) (dto.SubmitBookScheduleResponse, error) {
+	if len(req.Key) == 0 || req.UserId < 1 {
+		return dto.SubmitBookScheduleResponse{}, constant.ErrInvalidSubmitSchedule
+	}
+
+	// TODO: will be implemented
+	return dto.SubmitBookScheduleResponse{}, constant.ErrInvalidSubmitSchedule
+}
+
+func (b *bookModule) checkManyUserAtTimeRange(bookTime time.Time) bool {
+	schedulePickupTimeStart := bookTime.Add(-time.Minute * time.Duration(bookTime.Minute())).Add(-time.Second * time.Duration(bookTime.Second())).Add(-time.Nanosecond * time.Duration(bookTime.Nanosecond()))
+	schedulePickupTimeEnd := schedulePickupTimeStart.Add(time.Hour * 1)
+
+	// TODO: will be continued when store already created
+	fmt.Sprintf("%s-%s", schedulePickupTimeStart, schedulePickupTimeEnd)
+	return true
 }
