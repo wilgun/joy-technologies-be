@@ -65,7 +65,7 @@ func (b *bookModule) GetBooksBySubject(ctx context.Context, req dto.UserGetBooks
 		}
 
 		book := model.UserBook{
-			Key:           work.Key,
+			BookId:        work.Key,
 			Title:         work.Title,
 			Author:        authors,
 			EditionNumber: work.EditionCount,
@@ -81,7 +81,7 @@ func (b *bookModule) GetBooksBySubject(ctx context.Context, req dto.UserGetBooks
 
 func (b *bookModule) SubmitBookSchedule(ctx context.Context, req dto.SubmitBookScheduleRequest) (dto.SubmitBookScheduleResponse, error) {
 	currentTime := time.Now().UTC()
-	if len(req.Key) == 0 || req.UserId < 1 || req.BookTime.Before(currentTime) {
+	if len(req.BookId) == 0 || req.UserId < 1 || req.BookTime.Before(currentTime) {
 		return dto.SubmitBookScheduleResponse{}, constant.ErrInvalidSubmitSchedule
 	}
 
@@ -89,7 +89,7 @@ func (b *bookModule) SubmitBookSchedule(ctx context.Context, req dto.SubmitBookS
 		return dto.SubmitBookScheduleResponse{}, constant.ErrInvalidSubmitSchedule
 	}
 
-	if b.bookStore.IsBookBorrowed(req.Key) {
+	if b.bookStore.IsBookBorrowed(req.BookId) {
 		return dto.SubmitBookScheduleResponse{}, constant.ErrBookBorrowed
 	}
 
@@ -107,7 +107,7 @@ func (b *bookModule) SubmitBookSchedule(ctx context.Context, req dto.SubmitBookS
 		ScheduleId:        schedule.ScheduleId,
 		UserId:            req.UserId,
 		ExpiredBorrowBook: req.BookTime.AddDate(constant.ExpiredBorrowYear, constant.ExpiredBorrowMonth, constant.ExpiredBorrowDay),
-		BookId:            req.Key,
+		BookId:            req.BookId,
 	})
 
 	resp := dto.SubmitBookScheduleResponse{
@@ -162,7 +162,7 @@ func (b *bookModule) AdminGetBooksBySubject(ctx context.Context, req dto.AdminGe
 	//	}
 	//
 	//	userBook := model.UserBook{
-	//		Key:           work.Key,
+	//		BookId:           work.BookId,
 	//		Title:         work.Title,
 	//		Author:        authors,
 	//		EditionNumber: work.EditionCount,
@@ -173,7 +173,7 @@ func (b *bookModule) AdminGetBooksBySubject(ctx context.Context, req dto.AdminGe
 	//	//	UserBook: userBook,
 	//	//}
 	//	//for _, borrowedBook := range borrowedBooks {
-	//	//	//if borrowedBook == userBook.Key {
+	//	//	//if borrowedBook == userBook.BookId {
 	//	//	//	adminBook.PickUpSchedule.StartPickUpBook
 	//	//	//}
 	//	//}

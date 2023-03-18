@@ -153,7 +153,7 @@ func TestSubmitBookSchedule(t *testing.T) {
 	expiredBorrowBook7Days := bookTime7Days.AddDate(constant.ExpiredBorrowYear, constant.ExpiredBorrowMonth, constant.ExpiredBorrowDay)
 
 	type params struct {
-		Key      string
+		BookId   string
 		UserId   int64
 		BookTime time.Time
 	}
@@ -168,7 +168,7 @@ func TestSubmitBookSchedule(t *testing.T) {
 		{
 			title: "Success - Submit Book Schedule",
 			params: params{
-				Key:      "asd",
+				BookId:   "asd",
 				UserId:   1,
 				BookTime: bookTime,
 			},
@@ -179,18 +179,18 @@ func TestSubmitBookSchedule(t *testing.T) {
 				ExpiredPickUpBook: schedulePickupTimeEnd,
 			},
 			expectations: func(params *params) {
-				mock.bookStore.EXPECT().IsBookBorrowed(params.Key).Return(false)
+				mock.bookStore.EXPECT().IsBookBorrowed(params.BookId).Return(false)
 				mock.bookStore.EXPECT().UserBorrowBook(params.UserId).Return(model.UserBorrowBook{})
 				mock.bookStore.EXPECT().CheckManyUserAtTimeRange(key).Return(constant.MaxUserAtTimeRange - 1)
 				mock.bookStore.EXPECT().SubmitBorrowBook(model.UserBorrowBook{
 					ScheduleId:        scheduleId,
 					UserId:            params.UserId,
-					BookId:            params.Key,
+					BookId:            params.BookId,
 					ExpiredBorrowBook: params.BookTime.AddDate(constant.ExpiredBorrowYear, constant.ExpiredBorrowMonth, constant.ExpiredBorrowDay),
 				}).Return(model.UserBorrowBook{
 					ScheduleId:        scheduleId,
 					UserId:            params.UserId,
-					BookId:            params.Key,
+					BookId:            params.BookId,
 					ExpiredBorrowBook: expiredBorrowBook,
 				})
 				mock.bookStore.EXPECT().SubmitScheduleBook(params.BookTime).Return(model.ScheduleBook{
@@ -203,7 +203,7 @@ func TestSubmitBookSchedule(t *testing.T) {
 		{
 			title: "Success - Submit Book Schedule One Week",
 			params: params{
-				Key:      "asd",
+				BookId:   "asd",
 				UserId:   1,
 				BookTime: bookTime7Days,
 			},
@@ -214,18 +214,18 @@ func TestSubmitBookSchedule(t *testing.T) {
 				ExpiredPickUpBook: schedulePickupTimeEnd7Days,
 			},
 			expectations: func(params *params) {
-				mock.bookStore.EXPECT().IsBookBorrowed(params.Key).Return(false)
+				mock.bookStore.EXPECT().IsBookBorrowed(params.BookId).Return(false)
 				mock.bookStore.EXPECT().UserBorrowBook(params.UserId).Return(model.UserBorrowBook{})
 				mock.bookStore.EXPECT().CheckManyUserAtTimeRange(key7Days).Return(constant.MaxUserAtTimeRange - 1)
 				mock.bookStore.EXPECT().SubmitBorrowBook(model.UserBorrowBook{
 					ScheduleId:        scheduleId,
 					UserId:            params.UserId,
-					BookId:            params.Key,
+					BookId:            params.BookId,
 					ExpiredBorrowBook: params.BookTime.AddDate(constant.ExpiredBorrowYear, constant.ExpiredBorrowMonth, constant.ExpiredBorrowDay),
 				}).Return(model.UserBorrowBook{
 					ScheduleId:        scheduleId,
 					UserId:            params.UserId,
-					BookId:            params.Key,
+					BookId:            params.BookId,
 					ExpiredBorrowBook: expiredBorrowBook7Days,
 				})
 				mock.bookStore.EXPECT().SubmitScheduleBook(params.BookTime).Return(model.ScheduleBook{
@@ -236,9 +236,9 @@ func TestSubmitBookSchedule(t *testing.T) {
 			},
 		},
 		{
-			title: "Failed - Key not passed",
+			title: "Failed - BookId not passed",
 			params: params{
-				Key:      "",
+				BookId:   "",
 				UserId:   1,
 				BookTime: bookTime,
 			},
@@ -250,7 +250,7 @@ func TestSubmitBookSchedule(t *testing.T) {
 		{
 			title: "Failed - Userid not passed",
 			params: params{
-				Key:      "asd",
+				BookId:   "asd",
 				BookTime: bookTime,
 			},
 			expectedError:  constant.ErrInvalidSubmitSchedule,
@@ -261,7 +261,7 @@ func TestSubmitBookSchedule(t *testing.T) {
 		{
 			title: "Failed - Book time not passed",
 			params: params{
-				Key:    "asd",
+				BookId: "asd",
 				UserId: 1,
 			},
 			expectedError:  constant.ErrInvalidSubmitSchedule,
@@ -272,7 +272,7 @@ func TestSubmitBookSchedule(t *testing.T) {
 		{
 			title: "Failed - Pick up time more than 7 days",
 			params: params{
-				Key:      "asd",
+				BookId:   "asd",
 				UserId:   1,
 				BookTime: bookTime8Days,
 			},
@@ -284,28 +284,28 @@ func TestSubmitBookSchedule(t *testing.T) {
 		{
 			title: "Failed - Book is being borrowed by another user",
 			params: params{
-				Key:      "asd",
+				BookId:   "asd",
 				UserId:   1,
 				BookTime: bookTime,
 			},
 			expectedError:  constant.ErrBookBorrowed,
 			expectedResult: dto.SubmitBookScheduleResponse{},
 			expectations: func(params *params) {
-				mock.bookStore.EXPECT().IsBookBorrowed(params.Key).Return(true)
+				mock.bookStore.EXPECT().IsBookBorrowed(params.BookId).Return(true)
 
 			},
 		},
 		{
 			title: "Failed - User is borrowing book",
 			params: params{
-				Key:      "asd",
+				BookId:   "asd",
 				UserId:   1,
 				BookTime: bookTime,
 			},
 			expectedError:  constant.ErrUserBorrowingBook,
 			expectedResult: dto.SubmitBookScheduleResponse{},
 			expectations: func(params *params) {
-				mock.bookStore.EXPECT().IsBookBorrowed(params.Key).Return(false)
+				mock.bookStore.EXPECT().IsBookBorrowed(params.BookId).Return(false)
 				mock.bookStore.EXPECT().UserBorrowBook(params.UserId).Return(model.UserBorrowBook{
 					UserId: params.UserId,
 				})
@@ -314,14 +314,14 @@ func TestSubmitBookSchedule(t *testing.T) {
 		{
 			title: "Failed - Many User at that time range",
 			params: params{
-				Key:      "asd",
+				BookId:   "asd",
 				UserId:   1,
 				BookTime: bookTime,
 			},
 			expectedError:  constant.ErrNotEligiblePickUpTimeSchedule,
 			expectedResult: dto.SubmitBookScheduleResponse{},
 			expectations: func(params *params) {
-				mock.bookStore.EXPECT().IsBookBorrowed(params.Key).Return(false)
+				mock.bookStore.EXPECT().IsBookBorrowed(params.BookId).Return(false)
 				mock.bookStore.EXPECT().UserBorrowBook(params.UserId).Return(model.UserBorrowBook{})
 				mock.bookStore.EXPECT().CheckManyUserAtTimeRange(key).Return(constant.MaxUserAtTimeRange + 1)
 			},
@@ -331,7 +331,7 @@ func TestSubmitBookSchedule(t *testing.T) {
 	for _, test := range tests {
 		test.expectations(&test.params)
 		result, err := mock.bookModule.SubmitBookSchedule(context.Background(), dto.SubmitBookScheduleRequest{
-			Key:      test.params.Key,
+			BookId:   test.params.BookId,
 			UserId:   test.params.UserId,
 			BookTime: test.params.BookTime,
 		})

@@ -14,7 +14,7 @@ type UserGetBooksByGenreResponse struct {
 }
 
 type SubmitBookScheduleRequest struct {
-	Key      string    `json:"key"`
+	BookId   string    `json:"book_id"`
 	UserId   int64     `json:"user_id"`
 	BookTime time.Time `json:"book_time"`
 }
