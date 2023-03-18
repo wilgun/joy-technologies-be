@@ -10,6 +10,7 @@ import (
 var (
 	ListScheduleBook          map[string][]string
 	ListUserBorrowBook        []model.UserBorrowBook
+	ListBorrowedBook          map[string]model.UserBorrowBook
 	ListBorrowedBooksSchedule map[string]model.ScheduleBook
 )
 
@@ -18,7 +19,8 @@ type BookStore interface {
 	CheckManyUserAtTimeRange(key string) int
 	SubmitBorrowBook(book model.UserBorrowBook) model.UserBorrowBook
 	SubmitScheduleBook(bookTime time.Time) model.ScheduleBook
-	IsBookBorrowed(key string) bool
+	IsBookBorrowed(bookId string) bool
+	GetListBorrowedBook() map[string]model.UserBorrowBook
 	GetListBorrowedBooksSchedule() map[string]model.ScheduleBook
 }
 
@@ -27,6 +29,8 @@ type bookStoreImpl struct {
 
 func NewBookStore() BookStore {
 	ListScheduleBook = map[string][]string{}
+	ListBorrowedBook = map[string]model.UserBorrowBook{}
+	ListBorrowedBooksSchedule = map[string]model.ScheduleBook{}
 	return &bookStoreImpl{}
 }
 
@@ -45,6 +49,7 @@ func (b *bookStoreImpl) CheckManyUserAtTimeRange(key string) int {
 
 func (b *bookStoreImpl) SubmitBorrowBook(book model.UserBorrowBook) model.UserBorrowBook {
 	ListUserBorrowBook = append(ListUserBorrowBook, book)
+	ListBorrowedBook[book.BookId] = book
 	return book
 }
 
@@ -68,8 +73,8 @@ func (b *bookStoreImpl) SubmitScheduleBook(bookTime time.Time) model.ScheduleBoo
 	return scheduleBook
 }
 
-func (b *bookStoreImpl) IsBookBorrowed(key string) bool {
-	if _, ok := ListBorrowedBooksSchedule[key]; ok {
+func (b *bookStoreImpl) IsBookBorrowed(bookId string) bool {
+	if _, ok := ListBorrowedBook[bookId]; ok {
 		return true
 	}
 	return false
@@ -77,4 +82,8 @@ func (b *bookStoreImpl) IsBookBorrowed(key string) bool {
 
 func (b *bookStoreImpl) GetListBorrowedBooksSchedule() map[string]model.ScheduleBook {
 	return ListBorrowedBooksSchedule
+}
+
+func (b *bookStoreImpl) GetListBorrowedBook() map[string]model.UserBorrowBook {
+	return ListBorrowedBook
 }
