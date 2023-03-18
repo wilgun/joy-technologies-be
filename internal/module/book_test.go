@@ -345,3 +345,212 @@ func TestSubmitBookSchedule(t *testing.T) {
 		}
 	}
 }
+
+func TestAdminGetBooksBySubject(t *testing.T) {
+	mock := InitMock(t)
+
+	type params struct {
+		subject string
+	}
+
+	currentTime := time.Now().UTC()
+	startPickUpBook1 := currentTime
+	expiredPickUpBook1 := currentTime.Add(time.Hour * 1)
+
+	userBook1 := model.UserBook{
+		BookId:        "111",
+		Title:         "Book 1",
+		Author:        []string{"author 1", "author 2"},
+		EditionNumber: 1,
+	}
+	userBook2 := model.UserBook{
+		BookId:        "222",
+		Title:         "Book 2",
+		Author:        []string{"author 3", "author 4"},
+		EditionNumber: 2,
+	}
+
+	userBorrowBook := model.UserBorrowBook{
+		ScheduleId: "123",
+		UserId:     1,
+		BookId:     "111",
+	}
+
+	borrowedBooks := map[string]model.UserBorrowBook{
+		"111": userBorrowBook,
+	}
+
+	userBorrowBook2 := model.UserBorrowBook{
+		ScheduleId: "456",
+		UserId:     1,
+		BookId:     "333",
+	}
+
+	borrowedBooks2 := map[string]model.UserBorrowBook{
+		"456": userBorrowBook2,
+	}
+
+	scheduleBook := model.ScheduleBook{
+		ScheduleId:        "123",
+		UserId:            1,
+		StartPickUpBook:   &startPickUpBook1,
+		ExpiredPickUpBook: &expiredPickUpBook1,
+	}
+
+	borrowedBooksSchedule := map[string]model.ScheduleBook{
+		"123": scheduleBook,
+	}
+
+	scheduleBook2 := model.ScheduleBook{
+		ScheduleId:        "333",
+		UserId:            1,
+		StartPickUpBook:   &startPickUpBook1,
+		ExpiredPickUpBook: &expiredPickUpBook1,
+	}
+
+	borrowedBooksSchedule2 := map[string]model.ScheduleBook{
+		"333": scheduleBook2,
+	}
+
+	pickUpSchedule1 := model.ScheduleBook{
+		StartPickUpBook:   &startPickUpBook1,
+		ExpiredPickUpBook: &expiredPickUpBook1,
+	}
+
+	resp := dto.AdminGetBooksByGenreResponse{
+		Books: []model.AdminBook{
+			{
+				UserBook:       userBook1,
+				PickUpSchedule: pickUpSchedule1,
+			},
+			{
+				UserBook: userBook2,
+			},
+		},
+	}
+
+	resp2 := dto.AdminGetBooksByGenreResponse{
+		Books: []model.AdminBook{
+			{
+				UserBook: userBook1,
+			},
+			{
+				UserBook: userBook2,
+			},
+		},
+	}
+
+	respOpenLibrary := openlibrary.UserGetBookResponse{
+		Name:      "loves",
+		WorkCount: 2,
+		Works: []openlibrary.Work{
+			{
+				Key:          "111",
+				Title:        "Book 1",
+				EditionCount: 1,
+				Authors: []openlibrary.Author{
+					{
+						Name: "author 1",
+					},
+					{
+						Name: "author 2",
+					},
+				},
+			},
+			{
+				Key:          "222",
+				Title:        "Book 2",
+				EditionCount: 2,
+				Authors: []openlibrary.Author{
+					{
+						Name: "author 3",
+					},
+					{
+						Name: "author 4",
+					},
+				},
+			},
+		},
+	}
+	tests := []struct {
+		title          string
+		params         params
+		expectedError  error
+		expectedResult dto.AdminGetBooksByGenreResponse
+		expectations   func(params *params)
+	}{
+		{
+			title: "Success - Get Books By Subject",
+			params: params{
+				subject: "loves",
+			},
+			expectedError:  nil,
+			expectedResult: resp,
+			expectations: func(params *params) {
+				mock.mockAPI.EXPECT().GetBooksBySubject(gomock.Any(), openlibrary.UserGetBookRequest{params.subject}).Return(respOpenLibrary, nil)
+				mock.bookStore.EXPECT().GetListBorrowedBook().Return(borrowedBooks)
+				mock.bookStore.EXPECT().GetListBorrowedBooksSchedule().Return(borrowedBooksSchedule)
+			},
+		},
+		{
+			title: "Success - Get Books By Subject without pickup schedule",
+			params: params{
+				subject: "loves",
+			},
+			expectedError:  nil,
+			expectedResult: resp2,
+			expectations: func(params *params) {
+				mock.mockAPI.EXPECT().GetBooksBySubject(gomock.Any(), openlibrary.UserGetBookRequest{params.subject}).Return(respOpenLibrary, nil)
+				mock.bookStore.EXPECT().GetListBorrowedBook().Return(borrowedBooks2)
+				mock.bookStore.EXPECT().GetListBorrowedBooksSchedule().Return(borrowedBooksSchedule2)
+			},
+		},
+		{
+			title: "Failed - Request Subject is an Empty String",
+			params: params{
+				subject: "",
+			},
+			expectedError:  constant.ErrInvalidSubject,
+			expectedResult: dto.AdminGetBooksByGenreResponse{},
+			expectations: func(params *params) {
+			},
+		},
+		{
+			title: "Failed - Error Get Data From Open Library",
+			params: params{
+				subject: "loves",
+			},
+			expectedError:  constant.ErrGetBooksOpenLibrary,
+			expectedResult: dto.AdminGetBooksByGenreResponse{},
+			expectations: func(params *params) {
+				mock.mockAPI.EXPECT().GetBooksBySubject(gomock.Any(), openlibrary.UserGetBookRequest{params.subject}).Return(openlibrary.UserGetBookResponse{}, errors.New("error get books"))
+			},
+		},
+		{
+			title: "Success - Books Not Found",
+			params: params{
+				subject: "zxc",
+			},
+			expectedError:  constant.ErrBooksNotFound,
+			expectedResult: dto.AdminGetBooksByGenreResponse{},
+			expectations: func(params *params) {
+				mock.mockAPI.EXPECT().GetBooksBySubject(gomock.Any(), openlibrary.UserGetBookRequest{params.subject}).Return(openlibrary.UserGetBookResponse{}, nil)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		test.expectations(&test.params)
+		result, err := mock.bookModule.AdminGetBooksBySubject(context.Background(), dto.AdminGetBooksByGenreRequest{
+			Subject: test.params.subject,
+		})
+
+		if !errors.Is(err, test.expectedError) {
+			t.Errorf("\ngot err  : %+v\nexpected : %+v", err, test.expectedError)
+		}
+
+		if !reflect.DeepEqual(result, test.expectedResult) {
+			t.Errorf("got err: expected result: %+v, actual result: %+v", test.expectedResult, result)
+		}
+	}
+}
