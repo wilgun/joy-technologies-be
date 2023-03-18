@@ -20,3 +20,21 @@ func (h *HttpHandlerImpl) GetBooksBySubject(w http.ResponseWriter, r *http.Reque
 	httputil.WriteSuccessResponse(w, resp)
 
 }
+
+func (h *HttpHandlerImpl) SubmitBorrowBook(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	req, err := httputil.GetSubmitBookScheduleRequest(r)
+	if err != nil {
+		result := errutil.Wrap(err)
+		httputil.WriteErrorResponse(w, result)
+		return
+	}
+
+	resp, err := h.bookModule.SubmitBookSchedule(r.Context(), req)
+	if err != nil {
+		result := errutil.Wrap(err)
+		httputil.WriteErrorResponse(w, result)
+		return
+	}
+
+	httputil.WriteSuccessResponse(w, resp)
+}

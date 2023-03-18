@@ -14,8 +14,14 @@ func Wrap(err error) dto.ResponseHandler {
 		httpCode = http.StatusMethodNotAllowed
 	case errors.Is(err, constant.ErrRouterNotFound):
 		httpCode = http.StatusNotFound
-	case errors.Is(err, constant.ErrInvalidSubject) || errors.Is(err, constant.ErrBooksNotFound):
+	case errors.Is(err, constant.ErrInvalidSubject) ||
+		errors.Is(err, constant.ErrBooksNotFound) ||
+		errors.Is(err, constant.ErrDecodeRequest) ||
+		errors.Is(err, constant.ErrInvalidSubmitSchedule) ||
+		errors.Is(err, constant.ErrNotEligiblePickUpTimeSchedule):
 		httpCode = http.StatusBadRequest
+	case errors.Is(err, constant.ErrUserBorrowingBook):
+		httpCode = http.StatusNotAcceptable
 	}
 
 	return dto.ResponseHandler{

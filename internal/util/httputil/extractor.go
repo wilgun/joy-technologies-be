@@ -1,8 +1,11 @@
 package httputil
 
 import (
+	"encoding/json"
 	"github.com/julienschmidt/httprouter"
+	"github.com/wilgun/joy-technologies-be/internal/constant"
 	"github.com/wilgun/joy-technologies-be/internal/dto"
+	"log"
 	"net/http"
 )
 
@@ -17,4 +20,15 @@ func GetBooksBySubjectRequest(r *http.Request, ps httprouter.Params) dto.UserGet
 		Subject: subject,
 	}
 
+}
+
+func GetSubmitBookScheduleRequest(r *http.Request) (dto.SubmitBookScheduleRequest, error) {
+	req := dto.SubmitBookScheduleRequest{}
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		log.Println("failed to decode submit book schedule request", err)
+		return req, constant.ErrDecodeRequest
+	}
+
+	return req, nil
 }

@@ -12,6 +12,7 @@ import (
 type HttpHandler interface {
 	//User
 	GetBooksBySubject(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	SubmitBorrowBook(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 }
 
 type HttpHandlerImpl struct {
