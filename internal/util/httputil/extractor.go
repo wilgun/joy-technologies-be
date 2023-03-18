@@ -32,3 +32,12 @@ func GetSubmitBookScheduleRequest(r *http.Request) (dto.SubmitBookScheduleReques
 
 	return req, nil
 }
+
+func GetAdminBooksBySubjectRequest(r *http.Request, ps httprouter.Params) dto.AdminGetBooksByGenreRequest {
+	subject := ps.ByName(subjectRequest)
+
+	return dto.AdminGetBooksByGenreRequest{
+		Subject: subject,
+	}
+
+}
