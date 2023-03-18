@@ -11,6 +11,7 @@ import (
 var (
 	ListScheduleBook   map[string][]string
 	ListUserBorrowBook []model.UserBorrowBook
+	ListBorrowedBook   []string
 )
 
 type BookStore interface {
@@ -45,6 +46,7 @@ func (b *bookStoreImpl) SubmitBorrowBook(book model.UserBorrowBook) model.UserBo
 	id := rand.Int()
 	book.BookId = strconv.Itoa(id)
 	ListUserBorrowBook = append(ListUserBorrowBook, book)
+	ListBorrowedBook = append(ListBorrowedBook, book.BookKey)
 	return book
 }
 
